@@ -7,8 +7,8 @@ from datetime import datetime
 st.header("1. Rekap Pesanan WA ke Google Sheets")
 
 scopes = [
-    "https://googleapis.com",
-    "https://googleapis.com",
+    "https://www.googleapis.com" + "/auth/spreadsheets",
+    "https://www.googleapis.com" + "/auth/drive",
 ]
 
 try:
