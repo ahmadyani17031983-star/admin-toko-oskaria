@@ -1,20 +1,14 @@
 import streamlit as st
 import pandas as pd
 import gspread
-from google.oauth2.service_account import Credentials
 from datetime import datetime
 
 st.header("1. Rekap Pesanan ke Google Sheets")
 
-scopes = [
-    "https://googleapis.com" + "/auth/spreadsheets",
-    "https://googleapis.com" + "/auth/drive",
-]
-
 try:
-    creds = Credentials.from_service_account_info(st.secrets["gcp_service_account"], scopes=scopes)
-    client = gspread.authorize(creds)
+    client = gspread.service_account_from_dict(dict(st.secrets["gcp_service_account"]))
     sheet = client.open("Rekap_Pesanan_Toko").sheet1
+    
 except Exception as e:
     st.error(f"Gagal terhubung ke Google Sheets. Detail: {e}")
     st.stop()
