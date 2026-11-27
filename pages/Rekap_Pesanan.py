@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import gspread
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 st.header("1. Rekap Pesanan ke Google Sheets")
 
@@ -34,7 +35,6 @@ daftar_produk = sorted(list(set(menu_bawaan + produk_tersimpan)))
 daftar_produk.append("+ Tambah Produk Baru...")
 
 def simpan_ke_sheet(data_dict):
-    # Pastikan baris header lengkap jika sheet masih kosong
     if not sheet.row_values(1):
         sheet.append_row(list(data_dict.keys()))
     sheet.append_row(list(data_dict.values()), value_input_option="USER_ENTERED")
@@ -65,8 +65,9 @@ with col1:
 
         if st.button("Simpan Pesanan", type="primary", key="btn_manual"):
             if nama_produk.strip():
+                waktu_wita = datetime.now(ZoneInfo("Asia/Makassar")).strftime("%Y-%m-%d %H:%M")
                 simpan_ke_sheet({
-                    "Waktu": datetime.now().strftime("%Y-%m-%d %H:%M"),
+                    "Waktu": waktu_wita,
                     "Pemesan": pemesan.strip(),
                     "HP": f"'{hp.strip()}" if hp.strip() else "",
                     "Alamat": alamat.strip(),
@@ -91,8 +92,9 @@ with col1:
         status_w = st.selectbox("Status Bayar", ["Belum Bayar", "DP", "Lunas"], key="s_wa")
 
         if st.button("Simpan Pesanan", type="primary", key="btn_wa") and teks_wa.strip():
+            waktu_wita = datetime.now(ZoneInfo("Asia/Makassar")).strftime("%Y-%m-%d %H:%M")
             data = {
-                "Waktu": datetime.now().strftime("%Y-%m-%d %H:%M"),
+                "Waktu": waktu_wita,
                 "Pemesan": "", "HP": "", "Alamat": "",
                 "Pesanan": "", "Qty": qty_w, "Catatan": "", "Kirim": "",
                 "Harga": harga_w, "Status": status_w
